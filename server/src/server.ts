@@ -7,15 +7,13 @@ import cors from "cors"
 
 const app = express()
 const server = http.createServer(app)
-const io = new Server(server);
+const io = new Server(server, {
+    cors: {
+        origin: "*"
+    }
+});
 
 app.use(cors())
-app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', 'http://localhost:5173');
-    res.header('Access-Control-Allow-Methods', 'GET, POST');
-    res.header('Access-Control-Allow-Headers', 'Content-Type');
-    next();
-});
 montarChat(io);
 
 const localIP = getLocalIP();
