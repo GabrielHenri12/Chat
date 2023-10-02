@@ -1,49 +1,8 @@
-import { useState, useEffect } from 'react'
-import io from 'socket.io-client';
 import './App.css'
+import { useChat } from './hooks/useChat';
 
 function App() {
-  const socket = io('http://192.168.1.159:3000');
-  const [username, setUsername] = useState('');
-  const [message, setMessage] = useState('');
-  const [chatMessages, setChatMessages] = useState<any[]>([]);
-  const [users, setUsers] = useState([]);
-
-  useEffect(() => {
-    if (socket) {
-      socket.on('chat-message', (data) => {
-        alert(data)
-        //setChatMessages((prevMessages) => [...prevMessages, data]);
-      });
-
-      socket.on('user-list', (users) => {
-        setUsers(users);
-      });
-
-      socket.on('user-connected', (data) => {
-        const message = `${data.username} entrou no chat.`;
-        setChatMessages((prevMessages) => [...prevMessages, message]);
-      });
-
-      socket.on('user-disconnected', (socketId) => {
-        const message = `${users[socketId]} saiu do chat.`;
-        setChatMessages((prevMessages) => [...prevMessages, message]);
-      });
-    }
-  }, [socket, users]);
-
-  const handleLogin = () => {
-    if (username.trim() !== '') {
-      socket.emit('user-login', username);
-    }
-  };
-
-  const handleSendMessage = () => {
-    if (message.trim() !== '') {
-      socket.emit('chat-message', message);
-      setMessage('');
-    }
-  };
+  const { username, users, chatMessages, message, setMessage, handleLogin, handleSendMessage, setUsername } = useChat();
 
   return (
     <div>
